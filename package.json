@@ -28,7 +28,7 @@
   "activationEvents": [
     "workspaceContains:**/8base.{yml,yaml}"
   ],
-  "main": "./out/src/main.js",
+  "main": "./out/src/extension.js",
   "contributes": {
     "snippets": [
       {

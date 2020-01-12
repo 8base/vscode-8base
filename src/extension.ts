@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { loadYamlExtension } from "./extension/yaml/schema/load-yaml-extension";
+import { loadYamlExtension } from "./yaml/schema/loadYamlExtension";
 
 export const activate = async (context: vscode.ExtensionContext): Promise<void> => {
   await loadYamlExtension();
