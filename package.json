@@ -1,0 +1,66 @@
+{
+  "name": "vscode-8base",
+  "displayName": "8base Developer Tools",
+  "description": "Develop serverless applications on 8base Platform",
+  "author": "Vladimir Panimaskin <panimaskin94@gmail.com> (https://github.com/vepanimas)",
+  "license": "MIT",
+  "preview": true,
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.41.0"
+  },
+  "keywords": [
+    "8base",
+    "serverless",
+    "yml",
+    "yaml"
+  ],
+  "categories": [
+    "Other",
+    "Snippets",
+    "Linters"
+  ],
+  "activationEvents": [],
+  "main": "./out/src/extension.js",
+  "contributes": {},
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc",
+    "watch": "tsc -watch",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js",
+    "lint": "eslint . --cache --ext .js,.ts",
+    "lint:fix": "eslint . --cache --ext .js,.ts --fix"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.11.7",
+    "@types/vscode": "^1.41.0",
+    "@typescript-eslint/eslint-plugin": "^2.15.0",
+    "@typescript-eslint/parser": "^2.15.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-promise": "^4.2.1",
+    "glob": "^7.1.5",
+    "husky": "^4.0.6",
+    "lint-staged": "^9.5.0",
+    "mocha": "^6.2.2",
+    "prettier": "^1.19.1",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.4",
+    "vscode-test": "^1.2.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,ts}": [
+      "eslint --cache --ext '.js,.ts' --fix",
+      "git add"
+    ]
+  }
+}
