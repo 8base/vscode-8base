@@ -2,7 +2,12 @@
   "name": "vscode-8base",
   "displayName": "8base Developer Tools",
   "description": "Develop serverless applications on 8base Platform",
-  "author": "Vladimir Panimaskin <panimaskin94@gmail.com> (https://github.com/vepanimas)",
+  "publisher": "8base",
+  "author": {
+    "name": "Vladimir Panimaskin",
+    "email": "vladimir.panimaskin@8base.com",
+    "url": "https://github.com/vepanimas"
+  },
   "license": "MIT",
   "preview": true,
   "version": "0.0.1",
@@ -20,9 +25,28 @@
     "Snippets",
     "Linters"
   ],
-  "activationEvents": [],
-  "main": "./out/src/extension.js",
-  "contributes": {},
+  "activationEvents": [
+    "workspaceContains:**/8base.{yml,yaml}"
+  ],
+  "main": "./out/src/main.js",
+  "contributes": {
+    "snippets": [
+      {
+        "language": "yaml",
+        "path": "./snippets/project.json"
+      }
+    ],
+    "yamlValidation": [
+      {
+        "fileMatch": "8base.yml",
+        "url": "./schemas/8base.schema.json"
+      },
+      {
+        "fileMatch": "8base.yaml",
+        "url": "./schemas/8base.schema.json"
+      }
+    ]
+  },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc",
@@ -32,6 +56,9 @@
     "lint": "eslint . --cache --ext .js,.ts",
     "lint:fix": "eslint . --cache --ext .js,.ts --fix"
   },
+  "extensionDependencies": [
+    "redhat.vscode-yaml"
+  ],
   "devDependencies": {
     "@types/glob": "^7.1.1",
     "@types/mocha": "^5.2.7",
