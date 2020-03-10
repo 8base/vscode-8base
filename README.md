@@ -6,7 +6,8 @@ When using 8base, you're project benefits from having:
 
 * A fully scalable serverless API
 * A managed MySQL Database that's hosted on AWS
-* Ready-to-use app services, like Authentication, * Authorization, and File Storage
+* Ready-to-use app services, like Authentication
+* Authorization, and File Storage
 * 8base's rock-star team and the Community
 * So, so, so much more!
 
