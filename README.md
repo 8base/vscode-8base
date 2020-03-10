@@ -1,48 +1,21 @@
-# vscode-8base README
+# 8base platform support for VSCode
 
-This is the README for your extension "vscode-8base". After writing up a brief description, we recommend including the following sections.
+**8base** is a Backend-as-a-Service. It lets front-end developers focus more on what they love and backend developers expedite their workflow. As our CEO likes to say, "it's totally awesome!"
+
+When using 8base, you're project benefits from having:
+
+* A fully scalable serverless API
+* A managed MySQL Database that's hosted on AWS
+* Ready-to-use app services, like Authentication, * Authorization, and File Storage
+* 8base's rock-star team and the Community
+* So, so, so much more!
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+> **NOTE**: This extension is in active development
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+* Project configuration autocomplete and validation
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+This extension depends on [Red Hat Yaml](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml) extension. It will be loaded automatically at the installation time.
