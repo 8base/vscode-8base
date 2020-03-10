@@ -30,12 +30,6 @@
   ],
   "main": "./out/src/extension.js",
   "contributes": {
-    "snippets": [
-      {
-        "language": "yaml",
-        "path": "./snippets/project.json"
-      }
-    ],
     "yamlValidation": [
       {
         "fileMatch": "8base.yml",

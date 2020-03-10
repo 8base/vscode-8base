@@ -2,16 +2,210 @@
   "$id": "https://8base.com/8base.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema",
   "title": "Project",
+  "description": "8base project manifest.",
   "type": "object",
   "additionalProperties": false,
+  "definitions": {
+    "handler": {
+      "type": "object",
+      "title": "Function handler",
+      "description": "The file defines the function handling the GraphQL call.",
+      "properties": {
+        "code": {
+          "type": "string",
+          "title": "Source code",
+          "description": "Path to the file with function's source code."
+        }
+      },
+      "required": ["code"],
+      "additionalProperties": false
+    },
+    "resolver": {
+      "type": "object",
+      "title": "Resolver",
+      "markdownDescription": "A *resolver* is a function type that gets exposed to the GraphQL API and can be directly called from client apps. Resolvers allow you to add custom queries and mutations in addition to the auto-generated CRUD operations 8base handles for you. Resolvers are used to integrate 3rd party APIs, query / coerce data, or run custom algorithms. \n\n[More details](https://docs.8base.com/docs/8base-console/custom-functions/resolvers)",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Function type",
+          "const": "resolver"
+        },
+        "handler": {
+          "$ref": "#/definitions/handler"
+        },
+        "schema": {
+          "type": "string",
+          "title": "Resolver schema",
+          "markdownDescription": "The file defines the GraphQL function and permitted response type. This describes the function name and arguments that the developer connecting to the GraphQL API has available."
+        }
+      },
+      "required": ["type", "handler", "schema"],
+      "additionalProperties": false
+    },
+    "task": {
+      "type": "object",
+      "title": "Task",
+      "markdownDescription": "A *task* is a type of function that can be invoked directly from other functions or executed on a specified interval. A task can either be specified to run on a schedule or not. If not, it is then only expected to run whenever called by another custom function. \n\n [More details](https://docs.8base.com/docs/8base-console/custom-functions/tasks)",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Function type",
+          "const": "task"
+        },
+        "handler": {
+          "$ref": "#/definitions/handler"
+        },
+        "schedule": {
+          "type": "string",
+          "title": "Task schedule",
+          "markdownDescription": "Accepts two types of expressions: **Rate** and **Cron** - both of which specify a scheduled invocation on a re-occuring schedule. \n#### Rate expressions \n`rate(Value Unit)`\n\n| Expression | Instruction |\n| :--- | :--- |\n| rate(5 minutes) | Invoke task every 5 minutes |\n| rate(1 hour) | Invoke task every hour |\n| rate(7 days) | Invoke task every seven days |\n\n ##### Singular vs. Plural\n\nFor a singular value (1) the unit must be written as singular, otherwise it needs to be plural - rate(**1 day** *vs.* **5 days**).\n\n #### Cron expressions\n`cron(Minutes Hours Day-of-month Month Day-of-week Year)`\n\n| Expression | Instruction |\n| :--- | :--- |\n| cron(0 10 ? *) | Invoke task at 10:00am (UTC) everyday |\n| cron(15 12 ? *) | Invoke task at 12:15pm (UTC) everyday |\n| cron(0 18 ? MON-FRI ) | Invoke task at 06:00pm (UTC) every Mon-Fri |\n| cron(0/10 ? MON-FRI *) | Invoke task every 10 min Mon-Fri |\n| cron(0/5 8-17 ? MON-FRI ) | Invoke task every 5 minutes Mon-Fri between 8:00am and 5:55pm (UTC) |\n| cron(0 9 ? 2#1 ) | Invoke task at 9 a.m. (UTC) the first Monday of each month |\n\nCron expressions that lead to rates faster than one invocation/minute are not supported. Additionally, one of the day-of-month or day-of-week values must be a question mark (?). \n\n[More details](https://docs.8base.com/docs/8base-console/custom-functions/tasks)"
+        }
+      },
+      "required": ["type", "handler"],
+      "additionalProperties": false
+    },
+    "trigger": {
+      "type": "object",
+      "title": "Trigger",
+      "markdownDescription": "A *trigger* is a type of function that runs in response to a data mutation event (i.e, while creating, updating or deleting an object). This allows for important actions to run as callbacks to your data commits, without cluttering up client apps with web requests. \n\n [More details](https://docs.8base.com/docs/8base-console/custom-functions/triggers)",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Function type",
+          "enum": ["trigger.before", "trigger.after"]
+        },
+        "handler": {
+          "$ref": "#/definitions/handler"
+        },
+        "operation": {
+          "type": "string",
+          "title": "Trigger operation",
+          "markdownDescription": "The operation parameter defines what data type and event the trigger should listen to. For example, if we want to execute it after a `User` has been created we should specify `User.create`. \n\nPossible values for the data event are `create`, `update` and `delete`. \n\n[More details](https://docs.8base.com/docs/8base-console/custom-functions/triggers#triggerbefore)",
+          "pattern": "^\\w+\\.(create|update|delete)$"
+        }
+      },
+      "required": ["type", "handler", "operation"],
+      "additionalProperties": false
+    },
+    "webhook": {
+      "type": "object",
+      "title": "Webhook",
+      "markdownDescription": "A *webhook* allows you to call Custom Functions as regular RESTful endpoints. They can be very useful if you integrate with a 3rd party service that posts data back to your app using a specified URL. For example, enabling a payment processing service such as Stripe or Coinbase Commerce to notify your app of a successful payment by calling X URL. \n\n [More details](https://docs.8base.com/docs/8base-console/custom-functions/webhooks)",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Function type",
+          "const": "webhook"
+        },
+        "handler": {
+          "$ref": "#/definitions/handler"
+        },
+        "method": {
+          "type": "string",
+          "title": "HTTP method",
+          "markdownDescription": "One of the most commonly used HTTP methods.",
+          "enum": ["POST", "GET", "DELETE", "ANY", "PUT", "HEAD", "PATCH", "TRACE", "OPTIONS", "CONNECT"],
+          "default": "POST"
+        },
+        "path": {
+          "type": "string",
+          "title": "Webhook path",
+          "markdownDescription": "Webhooks have an optional parameter `path` that allows you to manually specify the final URL fragment. By default, it gets defined as the function name. \n\n[Path parameters](https://docs.8base.com/docs/8base-console/custom-functions/webhooks#path-parameters)"
+        }
+      },
+      "required": ["type", "handler", "method"],
+      "additionalProperties": false
+    }
+  },
   "properties": {
     "functions": {
       "type": "object",
-      "description": "Serverless functions declaration."
+      "title": "Functions",
+      "markdownDescription": "In 8base, pretty much everything is extensible when using Custom Functions (CFs). If you want to extend your GraphQL API, add custom endpoints, or build some other server side functionality, CFs will be the answer. \n\n[More details](https://docs.8base.com/docs/8base-console/custom-functions)",
+      "propertyNames": {
+        "pattern": "^\\w+$",
+        "minLength": 1,
+        "maxLength": 34
+      },
+      "additionalProperties": {
+        "oneOf": [
+          { "$ref": "#/definitions/resolver" },
+          { "$ref": "#/definitions/task" },
+          { "$ref": "#/definitions/trigger" },
+          { "$ref": "#/definitions/webhook" }
+        ]
+      },
+      "defaultSnippets": [
+        {
+          "label": "Trigger",
+          "description": "A table trigger.",
+          "body": {
+            "${1:trigger}": {
+              "type": "trigger.${2|before,after|}",
+              "handler": {
+                "code": "${3:source}"
+              },
+              "operation": "${4:Table}.${5|create,update,delete|}"
+            }
+          }
+        },
+        {
+          "label": "Resolver",
+          "description": "A custom resolver.",
+          "body": {
+            "${1:resolver}": {
+              "type": "resolver",
+              "handler": {
+                "code": "${2:source}"
+              },
+              "schema": "${3:schema}"
+            }
+          }
+        },
+        {
+          "label": "Task",
+          "description": "A task.",
+          "body": {
+            "${1:task}": {
+              "type": "task",
+              "handler": {
+                "code": "${2:source}"
+              }
+            }
+          }
+        },
+        {
+          "label": "Schedule",
+          "description": "A scheduled task.",
+          "body": {
+            "${1:scheduledTask}": {
+              "type": "task",
+              "handler": {
+                "code": "${2:source}"
+              },
+              "schedule": "${3:schedule}"
+            }
+          }
+        },
+        {
+          "label": "Webhook",
+          "description": "A webhook.",
+          "body": {
+            "${1:webhook}": {
+              "type": "webhook",
+              "handler": {
+                "code": "${2:source}"
+              },
+              "method": "${3|POST,GET,DELETE,ANY,PUT,HEAD,PATCH,TRACE,OPTIONS,CONNECT|}"
+            }
+          }
+        }
+      ]
     },
     "permissions": {
       "type": "object",
-      "description": "Application permissions."
+      "title": "Permissions",
+      "markdownDescription": "Application permissions. **Is not supported now**, will be available in the near future. \n\n[More details](https://docs.8base.com/docs/8base-console/roles-and-permissions/#managing-permissions)"
     }
   }
 }
