@@ -3,11 +3,6 @@
   "displayName": "8base Developer Tools",
   "description": "Develop serverless applications on 8base Platform",
   "publisher": "8base",
-  "author": {
-    "name": "Vladimir Panimaskin",
-    "email": "vladimir.panimaskin@8base.com",
-    "url": "https://github.com/vepanimas"
-  },
   "license": "MIT",
   "preview": true,
   "version": "0.0.1",
